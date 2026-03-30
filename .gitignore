@@ -1,0 +1,9 @@
+build/
+*.exe
+*.log
+*.tmp
+*.obj
+*.o
+bmt_config.ini
+bmt_serial.log
+logs/

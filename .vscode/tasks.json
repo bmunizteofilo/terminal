@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build terminal_BMT",
+            "type": "shell",
+            "command": "C:/mingw64/bin/gcc.exe",
+            "args": [
+                "-g",
+                "${workspaceFolder}/main/main.c",
+                "-o",
+                "${workspaceFolder}/terminal_BMT.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        }
+    ]
+}
