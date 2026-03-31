@@ -9,6 +9,7 @@
 #define INPUT_BUFFER_SIZE 512
 #define SERIAL_BUFFER_SIZE 256
 #define PARTIAL_BUFFER_SIZE 2048
+#define PAUSE_QUEUE_SIZE 1048576
 #define MAX_COM_PORTS 256
 #define MAX_HISTORY_ENTRIES 100
 #define LOG_PATH_SIZE 260
@@ -84,12 +85,16 @@ typedef struct SerialState {
     volatile LONG running;
     volatile LONG stop_requested;
     volatile LONG connected;
+    volatile LONG paused;
     CRITICAL_SECTION console_lock;
     SerialConfig config;
     char partial_line[PARTIAL_BUFFER_SIZE];
     size_t partial_length;
     char history[MAX_HISTORY_ENTRIES][INPUT_BUFFER_SIZE];
     int history_count;
+    char paused_output[PAUSE_QUEUE_SIZE];
+    size_t paused_length;
+    unsigned long paused_dropped_messages;
 } SerialState;
 
 static int equals_ignore_case(const char *left, const char *right);
@@ -664,6 +669,77 @@ static void write_log_line(const SerialState *state, const char *text)
     fputs(text, file);
     fclose(file);
 }
+
+/**
+ * @brief Adiciona texto a fila de saida pausada.
+ *
+ * @param state Estado global do terminal serial.
+ * @param text Texto a ser armazenado na fila.
+ */
+static void enqueue_paused_output(SerialState *state, const char *text)
+{
+    size_t text_length = strlen(text);
+
+    if (state->paused_length + text_length >= sizeof(state->paused_output)) {
+        state->paused_dropped_messages++;
+        return;
+    }
+
+    memcpy(state->paused_output + state->paused_length, text, text_length);
+    state->paused_length += text_length;
+    state->paused_output[state->paused_length] = '\0';
+}
+
+/**
+ * @brief Despeja a fila acumulada durante a pausa no terminal.
+ *
+ * @param state Estado global do terminal serial.
+ */
+static void flush_paused_output(SerialState *state)
+{
+    if (state->paused_length > 0) {
+        printf("%s", state->paused_output);
+        state->paused_length = 0;
+        state->paused_output[0] = '\0';
+    }
+
+    if (state->paused_dropped_messages > 0) {
+        printf("[pause] %lu eventos nao puderam ser armazenados por limite de fila.\n",
+               state->paused_dropped_messages);
+        state->paused_dropped_messages = 0;
+    }
+}
+
+/**
+ * @brief Ativa a pausa visual do monitor serial.
+ *
+ * @param state Estado global do terminal serial.
+ */
+static void pause_monitor_display(SerialState *state)
+{
+    if (InterlockedCompareExchange(&state->paused, 0, 0)) {
+        return;
+    }
+
+    InterlockedExchange(&state->paused, 1);
+    printf("\n[pause] Monitor pausado. Pressione 'r' para retomar.\n");
+}
+
+/**
+ * @brief Retoma a exibicao do monitor serial e despeja a fila acumulada.
+ *
+ * @param state Estado global do terminal serial.
+ */
+static void resume_monitor_display(SerialState *state)
+{
+    if (!InterlockedCompareExchange(&state->paused, 0, 0)) {
+        return;
+    }
+
+    InterlockedExchange(&state->paused, 0);
+    printf("\n[resume] Monitor retomado. Despejando fila acumulada.\n");
+    flush_paused_output(state);
+}
 /**
  * @brief Verifica se uma linha segue o prefixo de logs do ESP-IDF.
  *
@@ -795,6 +871,7 @@ static void print_serial_line(const SerialState *state, const char *line)
     char level = '\0';
     int is_esp32_log;
     char log_output[INPUT_BUFFER_SIZE * 2];
+    int is_paused;
 
     if (line == NULL || line[0] == '\0') {
         return;
@@ -813,15 +890,27 @@ static void print_serial_line(const SerialState *state, const char *line)
     }
 
     log_output[0] = '\0';
+    is_paused = InterlockedCompareExchange((LONG *)&state->paused, 0, 0) != 0;
 
     if (state->config.timestamp_enabled) {
         format_local_timestamp(timestamp, sizeof(timestamp));
-        printf("[%s] ", timestamp);
         snprintf(log_output + strlen(log_output), sizeof(log_output) - strlen(log_output), "[%s] ", timestamp);
     }
 
-    printf("[serial] ");
     snprintf(log_output + strlen(log_output), sizeof(log_output) - strlen(log_output), "[serial] ");
+    snprintf(log_output + strlen(log_output), sizeof(log_output) - strlen(log_output), "%s\n", line);
+
+    if (is_paused) {
+        enqueue_paused_output((SerialState *)state, log_output);
+        write_log_line(state, log_output);
+        return;
+    }
+
+    if (state->config.timestamp_enabled) {
+        printf("[%s] ", timestamp);
+    }
+
+    printf("[serial] ");
 
     if (state->config.monitor_mode == BMT_MONITOR_ESP32 &&
         state->config.esp32_log_colors_enabled &&
@@ -833,7 +922,6 @@ static void print_serial_line(const SerialState *state, const char *line)
         printf("%s\n", line);
     }
 
-    snprintf(log_output + strlen(log_output), sizeof(log_output) - strlen(log_output), "%s\n", line);
     write_log_line(state, log_output);
 }
 
@@ -1188,12 +1276,16 @@ static DWORD WINAPI serial_hotkey_thread(LPVOID parameter)
 {
     SerialState *state = (SerialState *)parameter;
     int combo_previously_pressed = 0;
+    int pause_previously_pressed = 0;
+    int resume_previously_pressed = 0;
 
     while (InterlockedCompareExchange(&state->running, 0, 0)) {
         int ctrl_pressed = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
         int shift_pressed = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
         int t_pressed = (GetAsyncKeyState('T') & 0x8000) != 0;
         int combo_pressed = ctrl_pressed && shift_pressed && t_pressed;
+        int pause_pressed = !ctrl_pressed && !shift_pressed && (GetAsyncKeyState('P') & 0x8000) != 0;
+        int resume_pressed = !ctrl_pressed && !shift_pressed && (GetAsyncKeyState('R') & 0x8000) != 0;
 
         if (combo_pressed && !combo_previously_pressed) {
             EnterCriticalSection(&state->console_lock);
@@ -1203,7 +1295,21 @@ static DWORD WINAPI serial_hotkey_thread(LPVOID parameter)
             break;
         }
 
+        if (pause_pressed && !pause_previously_pressed) {
+            EnterCriticalSection(&state->console_lock);
+            pause_monitor_display(state);
+            LeaveCriticalSection(&state->console_lock);
+        }
+
+        if (resume_pressed && !resume_previously_pressed) {
+            EnterCriticalSection(&state->console_lock);
+            resume_monitor_display(state);
+            LeaveCriticalSection(&state->console_lock);
+        }
+
         combo_previously_pressed = combo_pressed;
+        pause_previously_pressed = pause_pressed;
+        resume_previously_pressed = resume_pressed;
         Sleep(50);
     }
 
@@ -1696,6 +1802,8 @@ static void print_help(void)
     printf("  bmt -about                        Mostra informacoes do projeto\n");
     printf("  bmt -start                        Abre a porta e inicia a escuta serial\n");
     printf("  bmt -stop                         Para a escuta e fecha a porta serial\n");
+    printf("  p                                 Pausa a exibicao do monitor serial ativo\n");
+    printf("  r                                 Retoma a exibicao e despeja a fila pausada\n");
     printf("  Ctrl+Shift+T                      Atalho para encerrar a comunicacao serial ativa\n");
     printf("  bmt -exit                         Fecha o Terminal BMT\n");
 }
@@ -1723,6 +1831,7 @@ static void print_status(const SerialState *state)
     printf("  Autosave: %s\n", bool_to_on_off(state->config.autosave_enabled));
     printf("  Reconnect: %s\n", bool_to_on_off(state->config.reconnect_enabled));
     printf("  Tema: %s\n", theme_mode_to_string(state->config.theme_mode));
+    printf("  Pausa do monitor: %s\n", InterlockedCompareExchange((LONG *)&state->paused, 0, 0) ? "ativa" : "inativa");
     printf("  Comunicacao: %s\n", InterlockedCompareExchange((LONG *)&state->running, 0, 0) ? "ativa" : "parada");
 }
 
@@ -2178,7 +2287,11 @@ static int start_serial(SerialState *state)
     }
 
     InterlockedExchange(&state->stop_requested, 0);
+    InterlockedExchange(&state->paused, 0);
     state->partial_length = 0;
+    state->paused_length = 0;
+    state->paused_output[0] = '\0';
+    state->paused_dropped_messages = 0;
     state->partial_line[0] = '\0';
 
     if (!open_serial_handle(state)) {
@@ -2212,7 +2325,7 @@ static int start_serial(SerialState *state)
     printf("Comunicacao iniciada em %s com baud %lu.\n",
            state->config.com_port,
            (unsigned long)state->config.baud_rate);
-    printf("Use Ctrl+Shift+T para encerrar a comunicacao e voltar ao prompt.\n\n");
+    printf("Use 'p' para pausar, 'r' para retomar e Ctrl+Shift+T para voltar ao prompt.\n\n");
     return 1;
 }
 
@@ -2234,6 +2347,7 @@ static void stop_serial(SerialState *state)
     }
 
     request_serial_stop(state);
+    InterlockedExchange(&state->paused, 0);
 
     if (state->reader_thread != NULL && state->reader_thread_id != current_thread_id) {
         WaitForSingleObject(state->reader_thread, INFINITE);
@@ -2279,6 +2393,9 @@ static void initialize_serial_state(SerialState *state)
     state->reader_thread_id = 0;
     state->hotkey_thread_id = 0;
     state->partial_length = 0;
+    state->paused_length = 0;
+    state->paused_output[0] = '\0';
+    state->paused_dropped_messages = 0;
     state->history_count = 0;
     InitializeCriticalSection(&state->console_lock);
 }
