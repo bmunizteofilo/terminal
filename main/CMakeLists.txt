@@ -1,1 +1,4 @@
-add_executable(terminal_BMT main.c)
+add_executable(terminal_BMT
+    main.c
+    terminal.c
+)
