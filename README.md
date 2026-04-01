@@ -92,6 +92,7 @@ Ou use `Ctrl+Shift+B` no VS Code.
 - `bmt -timestamp on|off`
 - `bmt -filter info|warning|error|debug|verbose|all`
 - `bmt -logs esp32 on|off`
+- `bmt -logs dma on|off`
 - `bmt -reconnect on|off`
 - `bmt -theme`
 - `bmt -theme default|light|highcontrast`
@@ -200,6 +201,27 @@ Temas disponiveis:
 - `default`
 - `light`
 - `highcontrast`
+
+## Atalho DMA
+
+Para agilizar a visualizacao de logs de DMA no padrao ESP32:
+
+```text
+bmt -logs dma on
+```
+
+Esse comando ativa ao mesmo tempo:
+
+- `bmt -monitor esp32`
+- `bmt -logs esp32 on`
+
+Para desfazer o preset:
+
+```text
+bmt -logs dma off
+```
+
+Esse comando retorna o monitor para `raw` e desliga a colorizacao de logs ESP32.
 
 ## Observacoes
 

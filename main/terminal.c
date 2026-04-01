@@ -1726,6 +1726,12 @@ static void print_banner(int config_loaded)
  */
 static void print_command_help(const char *command)
 {
+    if (equals_ignore_case(command, "-logs")) {
+        printf("bmt -logs esp32 on|off\n");
+        printf("bmt -logs dma on|off\n");
+        printf("  Controla a colorizacao ESP32 e o atalho de monitor para logs DMA.\n");
+        return;
+    }
     if (equals_ignore_case(command, "-send")) {
         printf("bmt -send <texto>\n");
         printf("  Envia texto puro pela serial ativa.\n");
@@ -1820,6 +1826,7 @@ static void print_help(void)
     printf("  bmt -send <texto>                 Envia texto manualmente pela serial\n");
     printf("  bmt -sendhex <hex>                Envia bytes em hexadecimal\n");
     printf("  bmt -logs esp32 on|off            Ativa ou desativa cores para logs ESP32\n");
+    printf("  bmt -logs dma on|off              Ativa ou desativa preset DMA para logs ESP32\n");
     printf("  bmt -timestamp on|off             Ativa ou desativa horario nas linhas recebidas\n");
     printf("  bmt -filter <nivel>               info, warning, error, debug, verbose, all\n");
     printf("  bmt -monitor raw|esp32            Alterna entre monitor bruto e interpretado\n");
@@ -1925,8 +1932,29 @@ static void print_about(const SerialState *state)
  */
 static int set_log_mode(SerialState *state, const char *target, const char *value)
 {
+    if (equals_ignore_case(target, "dma")) {
+        if (equals_ignore_case(value, "on")) {
+            state->config.monitor_mode = BMT_MONITOR_ESP32;
+            state->config.esp32_log_colors_enabled = 1;
+            printf("Preset DMA ativado: monitor esp32 e colorizacao de logs ESP32 ligados.\n");
+            auto_save_if_enabled(state);
+            return 1;
+        }
+
+        if (equals_ignore_case(value, "off")) {
+            state->config.monitor_mode = BMT_MONITOR_RAW;
+            state->config.esp32_log_colors_enabled = 0;
+            printf("Preset DMA desativado: monitor raw e colorizacao de logs ESP32 desligados.\n");
+            auto_save_if_enabled(state);
+            return 1;
+        }
+
+        fprintf(stderr, "Valor invalido. Use 'on' ou 'off'.\n");
+        return 0;
+    }
+
     if (!equals_ignore_case(target, "esp32")) {
-        fprintf(stderr, "Alvo de logs invalido. Use 'bmt -logs esp32 on' ou 'bmt -logs esp32 off'.\n");
+        fprintf(stderr, "Alvo de logs invalido. Use 'bmt -logs esp32 on|off' ou 'bmt -logs dma on|off'.\n");
         return 0;
     }
 
