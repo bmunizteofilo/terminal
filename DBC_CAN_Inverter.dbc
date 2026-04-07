@@ -1,0 +1,165 @@
+VERSION "2.3"
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: Inverter VCU Debugger
+
+BO_ 2499739664 COMMANDS_RX_MSG_ID_1: 8 VCU
+ SG_ OnOff_1 : 40|1@1+ (1,0) [0|1] ""  Debugger,Inverter
+ SG_ ControlMode_1 : 41|1@1+ (1,0) [0|1] ""  Debugger,Inverter
+ SG_ SpeedRef_1 : 0|16@1+ (1,-10000) [-10000|10000] "RPM"  Debugger,Inverter
+ SG_ TorqueRef_1 : 16|16@1+ (0.1,-200) [-200|200] "%"  Debugger,Inverter
+ SG_ ClearFaults_1 : 42|1@1+ (1,0) [0|1] ""  Debugger,Inverter
+ SG_ WatchDog_1 : 32|8@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Direction_1 : 43|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 2499743760 MEASURES_TX_MSG_ID_1: 8 Inverter
+ SG_ VoltageDC_1 : 0|10@1+ (1,0) [0|1000] "V"  Debugger,VCU
+ SG_ CurrentAC_1 : 10|12@1+ (0.15,-300) [-300|300] "A"  Debugger,VCU
+ SG_ VoltageAC_1 : 22|12@1+ (0.15,0) [0|600] "V"  Debugger,VCU
+ SG_ SpeedMotor_1 : 34|14@1+ (1,-8000) [-8000|8000] "RPM"  Debugger,VCU
+ SG_ TempMotor_1 : 48|8@1+ (1,-30) [-30|225] " C" Debugger,VCU
+ SG_ TempMotor_2 : 56|8@1+ (1,-30) [-30|225] " C" Debugger,VCU
+
+BO_ 2499744016 STATES_TX_MSG_ID_1: 8 Inverter
+ SG_ State_1 : 0|3@1+ (1,0) [0|7] ""  Debugger,VCU
+ SG_ Event_1 : 3|4@1+ (1,0) [0|15] ""  Debugger,VCU
+ SG_ ResolverError_1 : 9|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ ResolverCirc_1 : 10|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ ResolverAmp_1 : 11|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ OverSpeedRamp_1 : 12|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ OverSpeed_1 : 13|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ OverDCBusVoltage_1 : 14|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ UnderDCBusVoltage_1 : 15|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ OverLoad_1 : 16|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MainsFault_1 : 17|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ OverHeatingIGBT_1 : 18|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ OverHeatingMotor_1 : 19|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ OverPhaseACurrent_1 : 20|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ OverPhaseBCurrent_1 : 21|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ OverPhaseCCurrent_1 : 22|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ OffCancError_1 : 23|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ configError_1 : 25|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ wtdogError_1 : 26|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ FOCError_1 : 27|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ RunError_1 : 28|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ AlignError_1 : 29|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ CalibError_1 : 30|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ InitError_1 : 31|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD1_PGsource_1 : 32|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD2_PGsource_1 : 33|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD3_PGsource_1 : 34|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD4_PGsource_1 : 35|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD5_PGsource_1 : 36|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD6_PGsource_1 : 37|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD1_nflt_1 : 40|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD2_nflt_1 : 41|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD3_nflt_1 : 42|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD4_nflt_1 : 43|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD5_nflt_1 : 44|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD6_nflt_1 : 45|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD1_rdy_1 : 48|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD2_rdy_1 : 49|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD3_rdy_1 : 50|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD4_rdy_1 : 51|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD5_rdy_1 : 52|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD6_rdy_1 : 53|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ TempIGBT_1 : 56|8@1+ (1,-30) [-30|225] " C" Debugger,VCU
+
+BO_ 2499744272 GD_TX_MSG_ID_1: 8 Inverter
+ SG_ GD1_sec_not_ready_1 : 0|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD1_ovlo2_error_1 : 1|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD1_uvlo2_error_1 : 2|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD1_ocp_error_1 : 3|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD1_desat_error_1 : 4|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD1_gatemon_error_1 : 5|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD1_osm_error_1 : 6|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD1_prim_ready_1 : 7|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD2_sec_not_ready_1 : 8|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD2_ovlo2_error_1 : 9|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD2_uvlo2_error_1 : 10|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD2_ocp_error_1 : 11|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD2_desat_error_1 : 12|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD2_gatemon_error_1 : 13|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD2_osm_error_1 : 14|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD2_prim_ready_1 : 15|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD3_sec_not_ready_1 : 16|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD3_ovlo2_error_1 : 17|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD3_uvlo2_error_1 : 18|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD3_ocp_error_1 : 19|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD3_desat_error_1 : 20|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD3_gatemon_error_1 : 21|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD3_osm_error_1 : 22|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD3_prim_ready_1 : 23|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD4_sec_not_ready_1 : 24|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD4_ovlo2_error_1 : 25|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD4_uvlo2_error_1 : 26|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD4_ocp_error_1 : 27|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD4_desat_error_1 : 28|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD4_gatemon_error_1 : 29|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD4_osm_error_1 : 30|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD4_prim_ready_1 : 31|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD5_sec_not_ready_1 : 32|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD5_ovlo2_error_1 : 33|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD5_uvlo2_error_1 : 34|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD5_ocp_error_1 : 35|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD5_desat_error_1 : 36|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD5_gatemon_error_1 : 37|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD5_osm_error_1 : 38|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD5_prim_ready_1 : 39|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD6_sec_not_ready_1 : 40|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD6_ovlo2_error_1 : 41|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD6_uvlo2_error_1 : 42|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD6_ocp_error_1 : 43|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD6_desat_error_1 : 44|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD6_gatemon_error_1 : 45|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD6_osm_error_1 : 46|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ GD6_prim_ready_1 : 47|1@1+ (1,0) [0|0] "" Vector__XXX
+
+
+CM_ SG_ 2499739664 SpeedRef_1 "Speed reference for speed control [rpm]";
+CM_ SG_ 2499739664 TorqueRef_1 "Torque reference for torque control [% of nominal torque]";
+CM_ SG_ 2499743760 VoltageDC_1 "Inverter DC input Voltage";
+CM_ SG_ 2499743760 CurrentAC_1 "Inverter AC output current";
+CM_ SG_ 2499743760 VoltageAC_1 "Inverter AC output voltage";
+CM_ SG_ 2499743760 SpeedMotor_1 "Electric motor speed";
+CM_ SG_ 2499743760 TempMotor_1 "Temperature of electric motor";
+CM_ SG_ 2499743760 TempIGBT_1 "Inverter power module temperature";
+VAL_ 2499739664 OnOff_1 1 "Enable" 0 "Disable" ;
+VAL_ 2499739664 ControlMode_1 1 "Torque Mode" 0 "Speed Mode" ;
+VAL_ 2499739664 ClearFaults_1 1 "Clear Faults" 0 "None" ;
+VAL_ 2499739664 Direction_1 1 "Anti-Clockwise" 0 "Clockwise" ;
+VAL_ 2499744016 State_1 1 "Init" 2 "Fault" 3 "Ready" 4 "Calib" 5 "Align" 6 "Run" 0 "Config" ;
+VAL_ 2499744016 Event_1 1 "e_fault_clear" 2 "e_init" 3 "e_init_done" 4 "e_ready" 5 "e_app_on" 6 "e_calib" 7 "e_calib_done" 8 "e_align" 9 "e_align_done" 10 "e_run" 11 "e_app_off" 12 "e_config" 13 "e_config_done" 0 "e_fault" ;
+

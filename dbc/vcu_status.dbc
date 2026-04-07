@@ -1,0 +1,82 @@
+VERSION "VCU_Status_0.1"
+
+NS_ :
+    NS_DESC_
+    CM_
+    BA_DEF_
+    BA_
+    VAL_
+    CAT_DEF_
+    CAT_
+    FILTER
+    BA_DEF_DEF_
+    EV_DATA_
+    ENVVAR_DATA_
+    SGTYPE_
+    SGTYPE_VAL_
+    BA_DEF_SGTYPE_
+    BA_SGTYPE_
+    SIG_TYPE_REF_
+    VAL_TABLE_
+    SIG_GROUP_
+    SIG_VALTYPE_
+    SIGTYPE_VALTYPE_
+    BO_TX_BU_
+    BA_DEF_REL_
+    BA_REL_
+    BA_DEF_DEF_REL_
+    BU_SG_REL_
+    BU_EV_REL_
+    BU_BO_REL_
+    SG_MUL_VAL_
+
+BS_:
+
+BU_: VCU Vector__XXX
+
+BO_ 256 VCU_Status: 8 VCU
+ SG_ VCU_State : 0|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ VCU_CommandSource : 4|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ VCU_TorqueAllowed : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_TorqueLimited : 7|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_ThrottleHealth : 8|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ VCU_BrakeHealth : 10|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ VCU_RegenEnabled : 12|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_YawEnabled : 13|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_TractionEnabled : 14|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_BrakeDominanceHard : 15|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_HwFault : 16|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_CanFault : 17|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_InverterHandshakeFault : 18|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_RemoteAuthorized : 19|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_TcuHeartbeatOk : 20|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_HpcHeartbeatOk : 21|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_StartupFailed : 22|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_ControlledResetReq : 23|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_ThrottleState : 24|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ VCU_BrakeState : 26|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ VCU_DriverTakeover : 28|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_InverterHandshakeOk : 29|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_ReservedFlags : 30|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ VCU_AliveCounter : 32|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ VCU_StatusVersion : 36|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ VCU_Reserved : 40|24@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 257 VCU_Pedals: 8 VCU
+ SG_ VCU_LongitudinalRequest : 0|16@1- (1,0) [-100|100] "%" Vector__XXX
+ SG_ VCU_ThrottleRawHealth : 32|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ VCU_BrakeRawHealth : 34|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ VCU_PedalsValid : 36|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_PedalsTxEnabled : 37|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VCU_PedalsReservedFlags : 38|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ VCU_PedalsAliveCounter : 40|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ VCU_PedalsReserved : 44|20@1+ (1,0) [0|0] "" Vector__XXX
+
+VAL_ 256 VCU_State 0 "INIT_STARTUP_CHECK" 1 "NORMAL_DRIVER_ACTIVE" 2 "DEGRADED_YAW_OFF" 3 "DEGRADED_REGEN_OFF" 4 "LIMP_TORQUE_LIMITED" 5 "SAFE_STATE" 6 "REMOTE_CONTROL_ACTIVE" 7 "AUTONOMOUS_ACTIVE";
+VAL_ 256 VCU_CommandSource 0 "NONE" 1 "DRIVER" 2 "TCU" 3 "HPC";
+VAL_ 256 VCU_ThrottleHealth 0 "OK" 1 "DEGRADED_USE_A" 2 "DEGRADED_USE_B" 3 "CRITICAL";
+VAL_ 256 VCU_BrakeHealth 0 "OK" 1 "DEGRADED_USE_A" 2 "DEGRADED_USE_B" 3 "CRITICAL";
+VAL_ 256 VCU_ThrottleState 0 "FAULT" 1 "IDLE" 2 "ACCEL" 3 "FULL";
+VAL_ 256 VCU_BrakeState 0 "FAULT" 1 "RELEASED" 2 "BRAKING" 3 "FULL";
+VAL_ 257 VCU_ThrottleRawHealth 0 "OK" 1 "DEGRADED_USE_A" 2 "DEGRADED_USE_B" 3 "CRITICAL";
+VAL_ 257 VCU_BrakeRawHealth 0 "OK" 1 "DEGRADED_USE_A" 2 "DEGRADED_USE_B" 3 "CRITICAL";
